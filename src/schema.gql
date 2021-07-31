@@ -1,0 +1,19 @@
+type Todo {
+  id: Int!
+  title: String
+}
+
+type Todo2 {
+  title: String
+}
+
+type getTitle {
+  title: String
+}
+
+type Query {
+  todo: [Todo]
+  todo2: [Todo2]
+  id: Int!
+  getTitle: String
+}

@@ -1,0 +1,56 @@
+import express from 'express'
+import { ApolloServer, gql } from 'apollo-server-express'
+
+const typeDefs = gql`
+	type Todo {
+		id: Int!
+		title: String
+	}
+
+	type Query {
+		todo(id: Int): Todo
+		todoes(title: String): [Todo]
+	}
+
+`
+
+const todoes = [
+	{
+		id: 1,
+		title: 'simple task',
+	},
+	{
+		id: 2,
+		title: 'a little simple task',
+	},
+	{
+		id: 3,
+		title: 'difficult task',
+	},
+	{
+		id: 4,
+		title: 'forget task',
+	},
+]
+
+const resolvers = {
+	Query: {
+		todo: ( _: any, {id}: {id: number} ) => {
+			return todoes.find(todo => todo.id === id )
+		},
+		todoes: ( _: any, { title }: { title: string }) => {
+			return todoes.filter( todo => todo.title.includes(title))
+		},
+	},
+}
+
+const server = new ApolloServer({ typeDefs, resolvers })
+
+const app = express()
+server.applyMiddleware({ app })
+
+app.listen( { port: 4000 } , () => {
+	console.log(`server ready at http://localhost:4000${server.graphqlPath}`)
+})
+
+
